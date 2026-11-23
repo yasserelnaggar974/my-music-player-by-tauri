@@ -13,13 +13,15 @@
     "withGlobalTauri": true,
     "windows": [
       {
-        "title": "app",
+        "title": "Local Music Player",
         "width": 800,
-        "height": 600
+        "height": 850,
+        "resizable": true
       }
     ],
     "security": {
-      "csp": null
+      "csp": null,
+      "dangerousDisableAssetCspModification": true
     }
   },
   "bundle": {
