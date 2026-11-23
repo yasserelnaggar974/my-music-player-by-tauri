@@ -41,18 +41,18 @@
       <div class="library-head">
         <h2>Playlist <span id="count">(0)</span></h2>
         <div class="library-actions">
-          <label class="btn" for="fileInput">Add MP3 / FLAC files</label>
+          <label class="btn" for="fileInput">Add files</label>
           <input type="file" id="fileInput" accept="audio/*,.mp3,.flac,.m4a,.wav,.ogg,.aac" multiple hidden>
           <button id="clearBtn" class="ghost">Clear</button>
         </div>
       </div>
       <ol id="playlist" class="playlist"></ol>
-      <p class="empty" id="emptyMsg">Click “Add MP3 / FLAC files” or drag and drop tracks anywhere on this page.</p>
+      <p class="empty" id="emptyMsg">Click “Add files” or drag and drop tracks anywhere on this page.</p>
     </section>
 
     <audio id="audio" preload="metadata"></audio>
   </main>
 
-  <link rel="stylesheet" href="./src/style.css">
+  <script src="./src/player.js"></script>
 </body>
 </html>
