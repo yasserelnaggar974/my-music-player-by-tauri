@@ -21,7 +21,7 @@
   const dropzone = $("dropzone");
   const canvas = $("visualizer");
 
-  let tracks = [];          // { name, url }
+  let tracks = [];          // { name, url, file }
   let current = -1;
   let shuffle = false;
   let repeat = "off";       // off | all | one
@@ -51,7 +51,7 @@
     input.style.setProperty("--fill", ((input.value - min) / (max - min)) * 100 + "%");
   };
 
-  /* ---------- Loading files ---------- */
+  /* ---------- Loading files (Tauri Safe) ---------- */
   function addFiles(fileList) {
     const files = [...fileList].filter(
       (f) => f.type.startsWith("audio/") || /\.(mp3|m4a|wav|ogg|flac|aac)$/i.test(f.name)
@@ -59,14 +59,32 @@
     if (!files.length) return;
 
     const wasEmpty = tracks.length === 0;
-    files.forEach((f) => tracks.push({ name: cleanName(f), url: URL.createObjectURL(f) }));
-    renderPlaylist();
-    if (wasEmpty) loadTrack(0, false);
+    let filesProcessed = 0;
+
+    files.forEach((f) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        tracks.push({ 
+          name: cleanName(f), 
+          url: e.target.result, // Base64 Data URL
+          file: f 
+        });
+        
+        filesProcessed++;
+        
+        // Only render and load once all files are read
+        if (filesProcessed === files.length) {
+          renderPlaylist();
+          if (wasEmpty) loadTrack(0, false);
+        }
+      };
+      reader.readAsDataURL(f);
+    });
   }
 
   fileInput.addEventListener("change", () => {
     addFiles(fileInput.files);
-    fileInput.value = ""; // allow picking the same files again
+    fileInput.value = ""; 
   });
 
   // Drag & drop
@@ -108,7 +126,6 @@
   }
 
   function removeTrack(i) {
-    URL.revokeObjectURL(tracks[i].url);
     const wasPlaying = !audio.paused;
     tracks.splice(i, 1);
 
@@ -124,7 +141,6 @@
   }
 
   function clearAll() {
-    tracks.forEach((t) => URL.revokeObjectURL(t.url));
     tracks = [];
     current = -1;
     audio.pause();
