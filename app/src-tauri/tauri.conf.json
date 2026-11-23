@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "app",
+  "productName": "Local Music Player",
   "version": "0.1.0",
   "identifier": "com.codespace.app",
   "build": {
